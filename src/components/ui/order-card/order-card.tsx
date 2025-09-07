@@ -12,6 +12,7 @@ import { OrderStatus } from '@components';
 
 export const OrderCardUI: FC<OrderCardUIProps> = memo(
   ({ orderInfo, maxIngredients, locationState }) => (
+    
     <Link
       to={orderInfo.number.toString()}
       relative='path'
@@ -37,6 +38,8 @@ export const OrderCardUI: FC<OrderCardUIProps> = memo(
           {orderInfo.ingredientsToShow.map((ingredient, index) => {
             let zIndex = maxIngredients - index;
             let right = 20 * index;
+       
+        
             return (
               <li
                 className={styles.img_wrap}

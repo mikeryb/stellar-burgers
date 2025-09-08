@@ -21,8 +21,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ProtectedRoute } from '../ProtectedRoute';
 import { checkUserAuth, selectUser } from '../../slices/userSlice';
 import { useLocation } from 'react-router';
-import { fetchFeeds, getMyOrdersThunk, refreshOrders } from '../../slices/orderSlice';
-
+import {
+  fetchFeeds,
+  getMyOrdersThunk,
+  refreshOrders
+} from '../../slices/orderSlice';
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,22 +35,22 @@ const App = () => {
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(checkUserAuth());
-    dispatch(fetchFeeds());  
-    
+    dispatch(fetchFeeds());
   }, []);
 
   useEffect(() => {
-      if (user){
-    dispatch(getMyOrdersThunk())};
+    if (user) {
+      dispatch(getMyOrdersThunk());
+    }
     const interval = setInterval(() => {
       dispatch(refreshOrders(user));
     }, REFRESH_INTERVAL);
     return () => clearInterval(interval);
-  },[user]);
+  }, [user]);
 
   const location = useLocation();
   const navigate = useNavigate();
-    const backgroundLocation = location.state?.background;
+  const backgroundLocation = location.state?.background;
 
   return (
     <div className={styles.app}>
@@ -105,7 +108,7 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-                <Route
+        <Route
           path='/profile/orders/:number'
           element={
             <ProtectedRoute>
@@ -113,40 +116,14 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-         
+
         <Route path='*' element={<NotFound404 />} />
-        </Routes>
-        {backgroundLocation && <Routes>
-        <Route
-          path='/feed/:number'
-          element={
-            <Modal
-              title={''}
-              onClose={function (): void {
-                navigate(-1);
-              }}
-            >
-              <OrderInfo />
-            </Modal>
-          }
-        />
-        <Route
-          path='/ingredients/:id'
-          element={
-            <Modal
-              title={''}
-              onClose={function (): void {
-                navigate(-1);
-              }}
-            >
-              <IngredientDetails />
-            </Modal>
-          }
-        />
-        <Route
-          path='/profile/orders/:number'
-          element={
-            <ProtectedRoute>
+      </Routes>
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/feed/:number'
+            element={
               <Modal
                 title={''}
                 onClose={function (): void {
@@ -155,10 +132,38 @@ const App = () => {
               >
                 <OrderInfo />
               </Modal>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>}
+            }
+          />
+          <Route
+            path='/ingredients/:id'
+            element={
+              <Modal
+                title={''}
+                onClose={function (): void {
+                  navigate(-1);
+                }}
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <ProtectedRoute>
+                <Modal
+                  title={''}
+                  onClose={function (): void {
+                    navigate(-1);
+                  }}
+                >
+                  <OrderInfo />
+                </Modal>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      )}
     </div>
   );
 };

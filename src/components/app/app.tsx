@@ -12,41 +12,28 @@ import {
 import { Modal, OrderInfo, IngredientDetails } from '../';
 import '../../index.css';
 import styles from './app.module.css';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import { AppHeader } from '@components';
 import { RootState, AppDispatch } from '../../store';
 import { useEffect } from 'react';
 import { fetchIngredients } from '../../slices/productSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { ProtectedRoute } from '../ProtectedRoute';
 import { checkUserAuth, selectUser } from '../../slices/userSlice';
 import { useLocation } from 'react-router';
-import {
-  fetchFeeds,
-  getMyOrdersThunk,
-  refreshOrders
-} from '../../slices/orderSlice';
+
 
 const App = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector(selectUser);
-  const REFRESH_INTERVAL = 5000;
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+  
 
   useEffect(() => {
     dispatch(fetchIngredients());
     dispatch(checkUserAuth());
-    dispatch(fetchFeeds());
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      dispatch(getMyOrdersThunk());
-    }
-    const interval = setInterval(() => {
-      dispatch(refreshOrders(user));
-    }, REFRESH_INTERVAL);
-    return () => clearInterval(interval);
-  }, [user]);
+ 
 
   const location = useLocation();
   const navigate = useNavigate();

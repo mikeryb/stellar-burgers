@@ -1,7 +1,7 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { LoginUI } from '@ui-pages';
 import { RootState, AppDispatch } from '../../store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { loginUserThunk, selectError } from '../../slices/userSlice';
 import { TLoginData } from '@api'; 
 import { useLocation } from 'react-router';
@@ -10,9 +10,9 @@ import { Preloader } from '../../components/ui';
 
 export const Login: FC = () => {
   const location = useLocation();
-  const dispatch = useDispatch<AppDispatch>();
-  const error = useSelector<RootState, string>(selectError);
-  const {isInit, isLoading } = useSelector((store: RootState) => store.user);
+  const dispatch = useAppDispatch();
+  const error = useAppSelector(selectError);
+  const {isInit, isLoading } = useAppSelector((store: RootState) => store.user);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const handleSubmit = (e: SyntheticEvent) => {

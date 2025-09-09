@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
-import {useDispatch, useSelector} from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import {RootState, AppDispatch} from '../../store';
 import { TIngredient, TOrder, TOrdersData, TUser } from '../../utils/types';
 import { TTabMode } from '@utils-types';
@@ -9,7 +9,7 @@ import { selectIngredients, selectIsLoading, fetchIngredients } from '../../slic
 
 export const BurgerIngredients: FC = () => {
      
-    const ingredients = useSelector<RootState, TIngredient[]>(selectIngredients);
+    const ingredients = useAppSelector(selectIngredients);
     useEffect(() => {
     },[ingredients]);
   const buns: TIngredient[] = ingredients ? ingredients.filter(c => c.type === 'bun') : [];

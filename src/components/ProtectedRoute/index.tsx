@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { Outlet, Navigate, useNavigate } from 'react-router-dom';
 import { RootState } from '../../store';
 import { useLocation } from 'react-router';
@@ -16,7 +16,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   onlyUnAuth,
   children
 }) => {
-  const { isInit, user } = useSelector((store: RootState) => store.user);
+  const { isInit, user } = useAppSelector((store: RootState) => store.user);
     const location = useLocation();
 
 

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector} from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import styles from './constructor-page.module.css';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
@@ -11,8 +11,8 @@ import { TIngredient } from '@utils-types';
 
 
 export const ConstructorPage: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const isIngredientsLoading = useSelector<RootState, boolean>(selectIsLoading);
+  const dispatch = useAppDispatch();
+  const isIngredientsLoading = useAppSelector(selectIsLoading);
   return (
     <>
       {isIngredientsLoading ? (

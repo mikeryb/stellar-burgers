@@ -1,27 +1,26 @@
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { useDispatch, useSelector} from 'react-redux';
-import {RootState, AppDispatch} from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { RootState, AppDispatch } from '../../store';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
-import { postOrder, clearOrder } from '../../slices/orderSlice';
+import { postOrder, clearOrderData } from '../../slices/orderSlice';
+import { clearOrder } from '../../slices/constructSlice';
 
 export const BurgerConstructor: FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
-  
-const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
-
-   const { user } = useSelector((store: RootState) => store.user);
-   const { order: orderModalData, orderIsPosting: orderRequest, orderIngredients } = useSelector((store: RootState) => store.orders)
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const order = useSelector((state: RootState) => state.orders.orderIngredients);
-      const ingredients = order
-      .filter((c) => c.type !== 'bun')
-      .map((c) => ({ ...c, id: nanoid() }));
+  const { user } = useAppSelector((store: RootState) => store.user);
+  const { order: orderModalData, orderIsPosting: orderRequest } = useAppSelector(
+    (store: RootState) => store.orders
+  );
+  const order = useAppSelector(
+    (state: RootState) => state.construct.orderIngredients
+  );
+  const ingredients = order.filter((c) => c.type !== 'bun');
   const bun = order.find((c) => c.type === 'bun') || null;
-
 
   const constructorItems = {
     bun: bun,
@@ -31,13 +30,15 @@ const navigate = useNavigate();
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
     if (!user) {
-      navigate('/login'); 
-      return
-    };
-    dispatch(postOrder(orderIngredients));
+      navigate('/login');
+      return;
+    }
+    dispatch(postOrder(order));
   };
   const closeOrderModal = () => {
-        dispatch(clearOrder());
+    dispatch(clearOrder());
+    dispatch(clearOrderData());
+
   };
 
   const price = useMemo(

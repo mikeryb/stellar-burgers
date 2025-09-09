@@ -2,7 +2,7 @@ import { forwardRef, useMemo } from 'react';
 import { TIngredientsCategoryProps } from './type';
 import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
-import { useDispatch, useSelector} from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import {RootState, AppDispatch} from '../../store';
 
 
@@ -11,7 +11,7 @@ export const IngredientsCategory = forwardRef<
   TIngredientsCategoryProps
 >(({ title, titleRef, ingredients }, ref) => {
   /** TODO: взять переменную из стора */
-  const order = useSelector((store: RootState) => store.orders.orderIngredients);
+  const order = useAppSelector((store: RootState) => store.construct.orderIngredients);
   const bun = order.find((c) => c.type === 'bun');
   const notBunIngredients = order.filter((c) => c.type != 'bun');
   

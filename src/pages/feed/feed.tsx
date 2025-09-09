@@ -2,20 +2,25 @@ import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import {RootState, AppDispatch} from '../../store';
-import { selectIsLoading,selectOrders, fetchFeeds} from '../../slices/orderSlice';
+import { selectIsLoading,selectOrders, fetchFeeds, toggleFeedIsLoading} from '../../slices/feedsSlice';
 
 
 export const Feed: FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const orders: TOrder[] = useSelector<RootState, TOrder[]>(selectOrders);
-  const isLoading: boolean = useSelector<RootState, boolean>(selectIsLoading);
+  const REFRESH_INTERVAL = 5000;
+  const dispatch = useAppDispatch();
+  const orders: TOrder[] = useAppSelector(selectOrders);
+  const isLoading: boolean = useAppSelector(selectIsLoading);
   useEffect(() => {
         dispatch(fetchFeeds());
+        const interval = setInterval(() => {
+          dispatch(fetchFeeds())
+        }, REFRESH_INTERVAL);
+        return () => clearInterval(interval);
       },[]);
   if (isLoading) {
     return <Preloader />;    
   }   
-  return   <FeedUI orders={orders} handleGetFeeds={() => {dispatch(fetchFeeds())}} />;
+  return   <FeedUI orders={orders} handleGetFeeds={() => {dispatch(toggleFeedIsLoading());dispatch(fetchFeeds())}} />;
 };

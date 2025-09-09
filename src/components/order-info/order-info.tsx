@@ -2,19 +2,24 @@ import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient, TOrder } from '@utils-types';
-import {useDispatch, useSelector} from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import {RootState, AppDispatch} from '../../store';
 import { selectIngredients, selectIsLoading, fetchIngredients } from '../../slices/productSlice';
 import { useParams } from "react-router-dom";
-import { selectOrders, selectMyOrders } from '../../slices/orderSlice';
+import { selectOrders, selectMyOrders, fetchFeeds, getMyOrdersThunk } from '../../slices/feedsSlice';
+
 
 export const OrderInfo: FC = () => {
+  const dispatch = useAppDispatch()
   const  { number }  = useParams<{ number: string }>();
-  const orders = useSelector<RootState, TOrder[]>(selectOrders);
-  const myOrders = useSelector<RootState, TOrder[]>(selectMyOrders);
+  const orders = useAppSelector(selectOrders);
+  const myOrders = useAppSelector(selectMyOrders);
+useEffect(() => {dispatch(fetchFeeds());
+   dispatch(getMyOrdersThunk())
+  },[])
 
   const orderData = orders.find((c) => c.number.toString() === number)? orders.find((c) => c.number.toString() === number) :myOrders.find((c) => c.number.toString() === number);
-  const ingredients: TIngredient[] = useSelector<RootState, TIngredient[]>(selectIngredients);
+  const ingredients: TIngredient[] = useAppSelector(selectIngredients);
   useEffect(() => {
   },[orders, myOrders])
 
@@ -53,6 +58,7 @@ export const OrderInfo: FC = () => {
       (acc, item) => acc + item.price * item.count,
       0
     );
+
 
     return {
       ...orderData,

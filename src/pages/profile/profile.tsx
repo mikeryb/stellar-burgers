@@ -1,6 +1,6 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector} from 'react-redux';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { selectUser, editUserThunk } from '../../slices/userSlice';
 import {RootState, AppDispatch} from '../../store';
 import { TUser } from '@utils-types';
@@ -9,11 +9,11 @@ import { Preloader } from '@ui';
 
 export const Profile: FC = () => {
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
 
-  const userData = useSelector<RootState, TUser | null >(selectUser);
-  const isLoading  = useSelector((store: RootState) => store.user.isLoading);
+  const userData = useAppSelector(selectUser);
+  const isLoading  = useAppSelector((store: RootState) => store.user.isLoading);
   const user = userData? userData : {
     name: '',
     email: ''

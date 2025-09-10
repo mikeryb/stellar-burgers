@@ -6,7 +6,6 @@ import {
   TUser,
   TConstructorIngredient
 } from '../utils/types';
-import { nanoid } from 'nanoid';
 
 interface ConstructState {
   orderIngredients: TConstructorIngredient[];
@@ -20,20 +19,18 @@ export const constructSlice = createSlice({
   name: 'constructor',
   initialState,
   reducers: {
-    addToOrder: (state, action: PayloadAction<TIngredient>) => {
+    addToOrder: (state, action: PayloadAction<TConstructorIngredient>) => {
       if (action.payload.type === 'bun') {
         state.orderIngredients = state.orderIngredients.filter(
           (c) => c.type != 'bun'
         );
         state.orderIngredients.unshift({
-          ...action.payload,
-          id: nanoid()
+          ...action.payload
         });
         return;
       }
       state.orderIngredients.push({
-        ...action.payload,
-        id: nanoid()
+        ...action.payload
       });
     },
     removeFromOrder: (state, action: PayloadAction<string>) => {

@@ -6,6 +6,7 @@ import { TBurgerIngredientProps } from './type';
 import { useAppDispatch, useAppSelector } from '../../store';
 import {RootState, AppDispatch} from '../../store';
 import { addToOrder } from '../../slices/constructSlice';
+import { nanoid } from 'nanoid';
 
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
@@ -15,7 +16,7 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
     const dispatch = useAppDispatch();
 
     const handleAdd = () => {
-      dispatch(addToOrder(ingredient))
+      dispatch(addToOrder({...ingredient, id: nanoid()}))
     };
 
     return (

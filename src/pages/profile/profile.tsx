@@ -1,9 +1,20 @@
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { selectUser, editUserThunk } from '../../slices/userSlice';
+import {RootState, AppDispatch} from '../../store';
+import { TUser } from '@utils-types';
+import { Preloader } from '@ui';
+
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
-  const user = {
+
+  const dispatch = useAppDispatch();
+
+
+  const userData = useAppSelector(selectUser);
+  const isLoading  = useAppSelector((store: RootState) => store.user.isLoading);
+  const user = userData? userData : {
     name: '',
     email: ''
   };
@@ -20,7 +31,7 @@ export const Profile: FC = () => {
       name: user?.name || '',
       email: user?.email || ''
     }));
-  }, [user]);
+  }, [userData]);
 
   const isFormChanged =
     formValue.name !== user?.name ||
@@ -29,6 +40,7 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+    dispatch(editUserThunk(formValue))
   };
 
   const handleCancel = (e: SyntheticEvent) => {
@@ -47,7 +59,7 @@ export const Profile: FC = () => {
     }));
   };
 
-  return (
+  return ( isLoading? <Preloader /> :
     <ProfileUI
       formValue={formValue}
       isFormChanged={isFormChanged}

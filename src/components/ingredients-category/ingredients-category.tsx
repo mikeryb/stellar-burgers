@@ -2,17 +2,23 @@ import { forwardRef, useMemo } from 'react';
 import { TIngredientsCategoryProps } from './type';
 import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
+import { useAppDispatch, useAppSelector } from '../../store';
+import {RootState, AppDispatch} from '../../store';
+
 
 export const IngredientsCategory = forwardRef<
   HTMLUListElement,
   TIngredientsCategoryProps
 >(({ title, titleRef, ingredients }, ref) => {
   /** TODO: взять переменную из стора */
+  const order = useAppSelector((store: RootState) => store.construct.orderIngredients);
+  const bun = order.find((c) => c.type === 'bun');
+  const notBunIngredients = order.filter((c) => c.type != 'bun');
+  
+
   const burgerConstructor = {
-    bun: {
-      _id: ''
-    },
-    ingredients: []
+    bun: bun,
+    ingredients: notBunIngredients
   };
 
   const ingredientsCounters = useMemo(() => {
@@ -25,6 +31,7 @@ export const IngredientsCategory = forwardRef<
     if (bun) counters[bun._id] = 2;
     return counters;
   }, [burgerConstructor]);
+
 
   return (
     <IngredientsCategoryUI

@@ -1,21 +1,28 @@
-import { FC, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TOrder } from '@utils-types';
+import { useAppDispatch, useAppSelector } from '../../store';
+import {RootState, AppDispatch} from '../../store';
+import { selectIngredients, selectIsLoading, fetchIngredients } from '../../slices/productSlice';
+import { useParams } from "react-router-dom";
+import { selectOrders, selectMyOrders, fetchFeeds, getMyOrdersThunk } from '../../slices/feedsSlice';
+
 
 export const OrderInfo: FC = () => {
-  /** TODO: взять переменные orderData и ingredients из стора */
-  const orderData = {
-    createdAt: '',
-    ingredients: [],
-    _id: '',
-    status: '',
-    name: '',
-    updatedAt: 'string',
-    number: 0
-  };
+  const dispatch = useAppDispatch()
+  const  { number }  = useParams<{ number: string }>();
+  const orders = useAppSelector(selectOrders);
+  const myOrders = useAppSelector(selectMyOrders);
+useEffect(() => {dispatch(fetchFeeds());
+   dispatch(getMyOrdersThunk())
+  },[])
 
-  const ingredients: TIngredient[] = [];
+  const orderData = orders.find((c) => c.number.toString() === number)? orders.find((c) => c.number.toString() === number) :myOrders.find((c) => c.number.toString() === number);
+  const ingredients: TIngredient[] = useAppSelector(selectIngredients);
+  useEffect(() => {
+  },[orders, myOrders])
+
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -46,10 +53,12 @@ export const OrderInfo: FC = () => {
       {}
     );
 
+
     const total = Object.values(ingredientsInfo).reduce(
       (acc, item) => acc + item.price * item.count,
       0
     );
+
 
     return {
       ...orderData,
@@ -58,10 +67,13 @@ export const OrderInfo: FC = () => {
       total
     };
   }, [orderData, ingredients]);
+  
 
   if (!orderInfo) {
     return <Preloader />;
   }
+ 
+  
 
   return <OrderInfoUI orderInfo={orderInfo} />;
 };

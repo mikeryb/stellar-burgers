@@ -1,18 +1,33 @@
 import { FC, SyntheticEvent, useState } from 'react';
 import { RegisterUI } from '@ui-pages';
+import { RootState, AppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { TRegisterData } from '@api';
+import { registerUserThunk, selectError } from '../../slices/userSlice';
+
+
+
 
 export const Register: FC = () => {
+  const dispatch = useAppDispatch();
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const error = useAppSelector(selectError);
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
+       const formData: TRegisterData = {
+      email: email,
+      name: userName,
+      password: password ,
+    };
+    dispatch(registerUserThunk(formData));
   };
 
   return (
     <RegisterUI
-      errorText=''
+      errorText={error}
       email={email}
       userName={userName}
       password={password}

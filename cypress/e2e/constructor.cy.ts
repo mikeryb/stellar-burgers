@@ -153,4 +153,10 @@ describe('Создание заказа', () => {
     cy.get('[data-cy="constructor-bot"]').should('not.exist');
     cy.get('[data-cy="constructor-middle"]').should('contain', 'Выберите начинку');
   });
+ afterEach(() => {
+  cy.window().then((win) => {
+    win.localStorage.removeItem('refreshToken');
+  });
+  cy.clearCookie('accessToken');
+});
 });

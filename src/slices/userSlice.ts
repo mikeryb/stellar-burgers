@@ -8,7 +8,7 @@ import {
   registerUserApi,
   TAuthResponse,
   TLoginData
-} from '@api';
+} from '../utils/burger-api';
 import { TUser } from '@utils-types';
 import { setCookie, deleteCookie } from '../utils/cookie';
 import { RootState } from '../store';
@@ -20,7 +20,7 @@ export interface UserState {
   error: string;
 }
 
-const initialState: UserState = {
+export const initialState: UserState = {
   isInit: false,
   isLoading: false,
   user: null,
@@ -108,7 +108,7 @@ export const userSlice = createSlice({
       state.error = '';
       state.isLoading = false;
       state.user = action.payload.user;
-      state.isInit = true;
+      state.isInit = false;
     });
     builder.addCase(loginUserThunk.pending, (state) => {
       state.isLoading = true;
@@ -154,7 +154,6 @@ export const userSlice = createSlice({
       console.log(action.error);
     });
     builder.addCase(logoutThunk.fulfilled, (state) => {
-      state.isInit = false;
       state.user = null;
       state.isLoading = false;
     });

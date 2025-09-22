@@ -1,9 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  TIngredient,
-  TOrder,
-  TOrdersData,
-  TUser,
   TConstructorIngredient
 } from '../utils/types';
 
@@ -11,7 +7,7 @@ interface ConstructState {
   orderIngredients: TConstructorIngredient[];
 }
 
-const initialState: ConstructState = {
+export const initialState: ConstructState = {
   orderIngredients: []
 };
 

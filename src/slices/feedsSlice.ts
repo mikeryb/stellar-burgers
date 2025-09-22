@@ -1,7 +1,7 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getFeedsApi, getOrdersApi } from '@api';
-import { TIngredient, TOrder, TOrdersData, TUser } from '../utils/types';
+import { getFeedsApi, getOrdersApi } from '../utils/burger-api';
+import {  TOrder } from '../utils/types';
 
 interface FeedsState {
   feeds: { orders: TOrder[]; total: number; totalToday: number };
@@ -10,7 +10,7 @@ interface FeedsState {
   myOrderIsLoading: boolean;
 };
 
-const initialState: FeedsState = {
+export const initialState: FeedsState = {
   feeds: { orders: [], total: 0, totalToday: 0 },
   feedIsLoading: false,
   myOrders: [],

@@ -11,7 +11,7 @@ import { TIngredient } from '@utils-types';
 
 
 export const ConstructorPage: FC = () => {
-  const dispatch = useAppDispatch();
+
   const isIngredientsLoading = useAppSelector(selectIsLoading);
   return (
     <>

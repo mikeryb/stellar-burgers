@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { TIngredient, TOrder, TOrdersData, TUser } from '../utils/types';
-import { getFeedsApi, orderBurgerApi, getOrdersApi } from '@api';
+import { TIngredient, TOrder } from '../utils/types';
+import { orderBurgerApi } from '../utils/burger-api';
 
 interface OrderState {
   orderIsPosting: boolean;
   order: TOrder | null;
 }
 
-const initialState: OrderState = {
+export const initialState: OrderState = {
   orderIsPosting: false,
   order: null
 };

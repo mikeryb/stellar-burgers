@@ -1,3 +1,13 @@
+const testUrl = 'http://localhost:4000/';
+const constructorTop = '[data-cy="constructor-top"]';
+const constructorBot = '[data-cy="constructor-bot"]';
+const constructorMid = '[data-cy="constructor-middle"]';
+const ingredient = '[data-cy="ingredient-item"]';
+const modal = '[data-cy="modal"]';
+const modalCloseBtn = '[data-cy="modal-close-button"]';
+const modalOverlay = '[data-cy="modal-overlay"]';
+
+
 describe('Ingredients mock', () => {
   beforeEach(function () {
     cy.fixture('ingredients.json').as('mockIngredients');
@@ -7,34 +17,34 @@ describe('Ingredients mock', () => {
         body: { success: true, data: this.mockIngredients }
       });
     }).as('getIngredients');
-    cy.visit('http://localhost:4000/');
+    cy.visit(testUrl);
     cy.wait('@getIngredients');
   });
 
   it('Проверяем, что конструктор пустой изначально', () => {
-    cy.get('[data-cy="constructor-top"]').should('not.exist');
-    cy.get('[data-cy="constructor-bot"]').should('not.exist');
+    cy.get(constructorTop).should('not.exist');
+    cy.get(constructorBot).should('not.exist');
   });
 
   it('Можно добавить булку в конструктор', function () {
-    cy.get('[data-cy="ingredient-item"]')
+    cy.get(ingredient)
       .filter(':contains("Краторная булка N-200i")')
       .find('button')
       .contains('Добавить')
       .click();
 
-    cy.get('[data-cy="constructor-top"]').should('contain', 'булка');
-    cy.get('[data-cy="constructor-bot"]').should('contain', 'булка');
+    cy.get(constructorTop).should('contain', 'булка');
+    cy.get(constructorBot).should('contain', 'булка');
   });
 
   it('Можно добавить другой ингредиент', function () {
-    cy.get('[data-cy="ingredient-item"]')
+    cy.get(ingredient)
       .filter(':contains("Говяжий метеорит (отбивная)")')
       .find('button')
       .contains('Добавить')
       .click();
 
-    cy.get('[data-cy="constructor-middle"]').should(
+    cy.get(constructorMid).should(
       'contain',
       'Говяжий метеорит'
     );
@@ -42,35 +52,35 @@ describe('Ingredients mock', () => {
 
   describe('Modal window', () => {
     it('Открывается при клике на ингредиент', function () {
-      cy.get('[data-cy="ingredient-item"]')
+      cy.get(ingredient)
         .contains('Краторная булка N-200i')
         .click();
 
-      cy.get('[data-cy="modal"]').should('be.visible');
+      cy.get(modal).should('be.visible');
 
-      cy.get('[data-cy="modal"]').within(() => {
+      cy.get(modal).within(() => {
         cy.contains('Краторная булка N-200i').should('be.visible');
         cy.contains('Калории').should('exist');
       });
 
-      cy.get('[data-cy="modal-close-button"]').click();
-      cy.get('[data-cy="modal"]').should('not.exist');
+      cy.get(modalCloseBtn).click();
+      cy.get(modal).should('not.exist');
     });
 
     it('закрывается при клике на кнопку закрытия', function () {
-      cy.get('[data-cy="ingredient-item"]')
+      cy.get(ingredient)
         .contains('Краторная булка N-200i')
         .click();
-      cy.get('[data-cy="modal-close-button"]').click();
-      cy.get('[data-cy="modal"]').should('not.exist');
+      cy.get(modalCloseBtn).click();
+      cy.get(modal).should('not.exist');
     });
 
     it('закрывается при клике на оверлей', function () {
-      cy.get('[data-cy="ingredient-item"]')
+      cy.get(ingredient)
         .contains('Краторная булка N-200i')
         .click();
-      cy.get('[data-cy="modal-overlay"]').click({ force: true });
-      cy.get('[data-cy="modal"]').should('not.exist');
+      cy.get(modalOverlay).click({ force: true });
+      cy.get(modal).should('not.exist');
     });
   });
 });
@@ -104,7 +114,7 @@ describe('Создание заказа', () => {
         body: this.order
       });
     }).as('postOrder');
-    cy.visit('http://localhost:4000/');
+    cy.visit(testUrl);
     cy.wait('@getUser');
   });
 
@@ -113,12 +123,12 @@ describe('Создание заказа', () => {
   });
 
   it('собираем бургер', function () {
-    cy.get('[data-cy="ingredient-item"]')
+    cy.get(ingredient)
       .filter(':contains("Краторная булка N-200i")')
       .find('button')
       .contains('Добавить')
       .click();
-    cy.get('[data-cy="ingredient-item"]')
+    cy.get(ingredient)
       .filter(':contains("Говяжий метеорит (отбивная)")')
       .find('button')
       .contains('Добавить')
@@ -126,12 +136,12 @@ describe('Создание заказа', () => {
   });
 
   it('оформляем заказ', function () {
-    cy.get('[data-cy="ingredient-item"]')
+    cy.get(ingredient)
       .filter(':contains("Краторная булка N-200i")')
       .find('button')
       .contains('Добавить')
       .click();
-    cy.get('[data-cy="ingredient-item"]')
+    cy.get(ingredient)
       .filter(':contains("Говяжий метеорит (отбивная)")')
       .find('button')
       .contains('Добавить')
@@ -140,18 +150,18 @@ describe('Создание заказа', () => {
       .find('button')
       .contains('Оформить заказ')
       .click();
-    cy.get('[data-cy="modal"]').should('be.visible');
+    cy.get(modal).should('be.visible');
     cy.get('[data-cy="order-number"]').should(
       'contain',
       this.order.order.number
     );
-    cy.get('[data-cy="modal-overlay"]').click({ force: true });
+    cy.get(modalOverlay).click({ force: true });
   });
 
     it('проверяем, что конструктор пуст', function () {
-    cy.get('[data-cy="constructor-top"]').should('not.exist');
-    cy.get('[data-cy="constructor-bot"]').should('not.exist');
-    cy.get('[data-cy="constructor-middle"]').should('contain', 'Выберите начинку');
+    cy.get(constructorTop).should('not.exist');
+    cy.get(constructorBot).should('not.exist');
+    cy.get(constructorMid).should('contain', 'Выберите начинку');
   });
  afterEach(() => {
   cy.window().then((win) => {
